@@ -10,17 +10,16 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.List;
-
-import org.dynmap.fabric_1_18.event.BlockEvents;
-import org.dynmap.fabric_1_18.event.ServerChatEvents;
+import org.dynmap.fabric.event.BlockEvents;
+import org.dynmap.fabric.event.ServerChatEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+
+import java.util.List;
 
 @Mixin(ServerPlayNetworkHandler.class)
 public abstract class ServerPlayNetworkHandlerMixin {
@@ -49,7 +48,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
             locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void onSignUpdate(UpdateSignC2SPacket packet, List<TextStream.Message> signText, CallbackInfo info,
-            ServerWorld serverWorld, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity, SignBlockEntity signBlockEntity)
+                             ServerWorld serverWorld, BlockPos blockPos, BlockState blockState, BlockEntity blockEntity, SignBlockEntity signBlockEntity)
     {
         // Pull the raw text from the input.
         String[] rawTexts = new String[4];
