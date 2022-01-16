@@ -4,6 +4,8 @@ plugins {
 
 archivesBaseName = "Dynmap-${project.name}"
 
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
 configurations {
     shadow
     implementation.extendsFrom(shadow)
