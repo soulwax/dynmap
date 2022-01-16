@@ -44,7 +44,7 @@ jar {
 }
 
 remapJar {
-    archiveFileName = "${archivesBaseName}-${project.version}.jar"
+    archiveFileName = "Dynmap-${project.version}-fabric.jar"
     destinationDirectory = file '../target'
 }
 
