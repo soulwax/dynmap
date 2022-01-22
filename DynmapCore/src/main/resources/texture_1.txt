@@ -65,6 +65,7 @@ texturefile:id=red_bed,filename=assets/minecraft/textures/entity/bed/red.png,for
 texturefile:id=black_bed,filename=assets/minecraft/textures/entity/bed/black.png,format=BED
 texturepath:assets/minecraft/textures/block/
 texture:id=redstone_block
+texture:id=smooth_stone
 texture:id=grass_block_side
 texture:id=grass_block_side_overlay
 texture:id=grass_block_snow
@@ -1358,16 +1359,10 @@ block:id=light_weighted_pressure_plate,allfaces=0:gold_block,stdrot=true,transpa
 # Heavy weighted pressure plate
 block:id=heavy_weighted_pressure_plate,allfaces=0:iron_block,stdrot=true,transparency=TRANSPARENT
 
-# Redstone Comparator (active)
-block:id=comparator,data=0,data=2,top=6000:comparator_on,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=4,data=6,top=5000:comparator_on,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=8,data=10,top=4000:comparator_on,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=12,data=14,top=0:comparator_on,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-# Redstone Comparator (inactive)
-block:id=comparator,data=1,data=3,top=6000:comparator,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=5,data=7,top=5000:comparator,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=9,data=11,top=4000:comparator,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
-block:id=comparator,data=13,data=15,top=0:comparator,allsides=0:stone,bottom=0:stone,transparency=TRANSPARENT
+# Redstone Comparator (on)
+block:id=comparator,data=0,data=2,data=4,data=6,data=8,data=10,data=12,data=14,patch0=0:smooth_stone,patch1=0:comparator_on,patch2=0:redstone_torch,patch3=0:redstone_torch_off,transparency=TRANSPARENT
+# Redstone Comparator (off)
+block:id=comparator,data=1,data=3,data=5,data=7,data=9,data=11,data=13,data=15,patch0=0:smooth_stone,patch1=0:comparator,patch2=0:redstone_torch,patch3=0:redstone_torch_off,transparency=TRANSPARENT
 
 # Daylight Sensor
 # Inverted Daylight Sensor
@@ -2062,7 +2057,7 @@ block:id=conduit,allfaces=0:conduit,transparency=TRANSPARENT
 block:id=bubble_column,transparency=SEMITRANSPARENT
 
 # Smooth stone
-block:id=smooth_stone,allfaces=0:stone_slab_top,stdrot=true
+block:id=smooth_stone,allfaces=0:smooth_stone,stdrot=true
 
 # Smooth sandstone
 block:id=smooth_sandstone,allfaces=0:sandstone_top,stdrot=true
@@ -2132,7 +2127,6 @@ block:id=black_banner,id=black_wall_banner,data=*,patch0=0:oak_planks,patch1=0:b
 [1.14-]texture:id=wither_rose
 [1.14-]texture:id=lily_of_the_valley
 [1.14-]texture:id=smooth_stone_slab_side
-[1.14-]texture:id=smooth_stone
 [1.14-]texture:id=bamboo_stage0
 [1.14-]texture:id=bamboo_stalk
 [1.14-]texture:id=scaffolding_top
