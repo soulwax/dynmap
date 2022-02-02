@@ -227,6 +227,26 @@ public class IsoHDPerspective implements HDPerspective {
             laststep = blast;
         }
         /**
+         * Get light level at location, at location + step1, and at location + step1 + step2
+         * @param ll0 - light levels (filled in when returned)
+         * @param ll1 - light levels (filled in when returned)
+         * @param ll2 - light levels (filled in when returned)
+         */
+        @Override
+        public final void getLightLevelsAtOffsets(BlockStep step1, BlockStep step2, LightLevels ll0, LightLevels ll1, LightLevels ll2) {
+            BlockStep blast = laststep;
+            updateLightLevel(mapiter.getBlockType(), ll0);
+            mapiter.stepPosition(step1);
+            laststep = blast;
+            updateLightLevel(mapiter.getBlockType(), ll1);
+            mapiter.stepPosition(step2);
+            laststep = blast;
+            updateLightLevel(mapiter.getBlockType(), ll2);
+            mapiter.stepPosition(step2.opposite());
+            mapiter.stepPosition(step1.opposite());
+            laststep = blast;        	
+        }        
+        /**
          * Get current block type ID
          */
         @Override

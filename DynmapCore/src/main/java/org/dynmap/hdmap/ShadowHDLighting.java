@@ -56,6 +56,7 @@ public class ShadowHDLighting extends DefaultHDLighting {
         switch(ps.getLastBlockStep()) {
         case X_MINUS:
         case X_PLUS:
+        	// See which slice to use
             if(xyz[1] < mid) {
                 s1 = BlockStep.Y_MINUS;
                 w1 = mid - xyz[1];
@@ -111,94 +112,38 @@ public class ShadowHDLighting extends DefaultHDLighting {
             }
             break;
         }
+        // Order steps - first step should be one closer to midline (so we get current light, light from best face, and then light from step to side
+        if (w1 > w2) {	// If first is more offset than second
+        	int w = w1; w1 = w2; w2 = w;
+        	BlockStep s = s1; s1 = s2; s2 = s;
+        }
         /* Now get the 3 needed light levels */
         LightLevels skyemit0 = ps.getCachedLightLevels(0);
-        ps.getLightLevels(skyemit0);
         LightLevels skyemit1 = ps.getCachedLightLevels(1);
-        ps.getLightLevelsAtStep(s1, skyemit1);
         LightLevels skyemit2 = ps.getCachedLightLevels(2);
-        ps.getLightLevelsAtStep(s2, skyemit2);
+        ps.getLightLevelsAtOffsets(s1, s2, skyemit0, skyemit1, skyemit2);
 
         /* Get light levels */
-        int ll0 = getLightLevel(skyemit0, true);
-        int ll1 = getLightLevel(skyemit1, true);
-        int weight = 0;
-        if(ll1 < ll0)
-            weight -= w1;
-        else if(ll1 > ll0)
-            weight += w1;
-        int ll2 = getLightLevel(skyemit2, true);
-        if(ll2 < ll0)
-            weight -= w2;
-        else if(ll2 > ll0)
-            weight += w2;
-        outcolor[0].setColor(incolor);
-        int cscale = 256;
-        if(weight == 0) {
-            cscale = shadowscale[ll0];
-        }
-        else if(weight < 0) {   /* If negative, interpolate down */
-            weight = -weight;
-            if(ll0 > 0) {
-                cscale = (shadowscale[ll0] * (scale-weight) + shadowscale[ll0-1] * weight)/scale;
+        boolean day = true;
+        for (int cidx = 0; cidx < outcolor.length; cidx++) {
+            int ll0 = shadowscale[getLightLevel(skyemit0, day)];
+            int ll1 = shadowscale[getLightLevel(skyemit1, day)];
+            int ll2 = shadowscale[getLightLevel(skyemit2, day)];
+            // Compute level based on linear interpolation along edges of triangle ll0 (current) ll1 (best edge) and ll2 (best corner)
+            int ll;
+            if ((ll0 == ll1) && (ll0 == ll2)) {	// If flat light, nothing to do
+            	ll = ll0; 
+        	}
+            else {	// Linear of delta on each axis (
+            	ll = (ll0 * scale) + (((ll1 - ll0) * w2) + (((ll2 - ll0) * w1))) / scale;
             }
-            else {
-                cscale = shadowscale[ll0];
+            outcolor[cidx].setColor(incolor);
+            if (ll < 256) {
+                Color c = outcolor[cidx];
+                c.setRGBA((c.getRed() * ll) >> 8, (c.getGreen() * ll) >> 8, 
+                    (c.getBlue() * ll) >> 8, c.getAlpha());
             }
-        }
-        else {
-            if(ll0 < 15) {
-                cscale = (shadowscale[ll0] * (scale-weight) + shadowscale[ll0+1] * weight)/scale;
-            }
-            else {
-                cscale = shadowscale[ll0];
-            }
-        }
-        if(cscale < 256) {
-            Color c = outcolor[0];
-            c.setRGBA((c.getRed() * cscale) >> 8, (c.getGreen() * cscale) >> 8, 
-                (c.getBlue() * cscale) >> 8, c.getAlpha());
-        }
-        if(outcolor.length > 1) {
-            ll0 = getLightLevel(skyemit0, false);
-            ll1 = getLightLevel(skyemit1, false);
-            weight = 0;
-            if(ll1 < ll0)
-                weight -= w1;
-            else if(ll1 > ll0)
-                weight += w1;
-            ll2 = getLightLevel(skyemit2, false);
-            if(ll2 < ll0)
-                weight -= w2;
-            else if(ll2 > ll0)
-                weight += w2;
-            outcolor[1].setColor(incolor);
-            cscale = 256;
-            if(weight == 0) {
-                cscale = shadowscale[ll0];
-            }
-            else if(weight < 0) {   /* If negative, interpolate down */
-                weight = -weight;
-                if(ll0 > 0) {
-                    cscale = (shadowscale[ll0] * (scale-weight) + shadowscale[ll0-1] * weight)/scale;
-                }
-                else {
-                    cscale = shadowscale[ll0];
-                }
-            }
-            else {
-                if(ll0 < 15) {
-                    cscale = (shadowscale[ll0] * (scale-weight) + shadowscale[ll0+1] * weight)/scale;
-                }
-                else {
-                    cscale = shadowscale[ll0];
-                }
-            }
-            if(cscale < 256) {
-                Color c = outcolor[1];
-                c.setRGBA((c.getRed() * cscale) >> 8, (c.getGreen() * cscale) >> 8, 
-                    (c.getBlue() * cscale) >> 8, c.getAlpha());
-            }
+            day = false;
         }
     }
     

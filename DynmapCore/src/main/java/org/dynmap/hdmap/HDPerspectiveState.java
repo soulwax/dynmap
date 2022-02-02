@@ -19,6 +19,11 @@ public interface HDPerspectiveState {
      */
     void getLightLevelsAtStep(BlockStep step, LightLevels ll);
     /**
+     * Get light level at location, at location + step1, and at location + step1 + step2
+     * @param ll - light levels (filled in when returned)
+     */
+    void getLightLevelsAtOffsets(BlockStep step1, BlockStep step2, LightLevels ll0, LightLevels ll1, LightLevels ll2);
+    /**
      * Get current block state
      * @return block 
      */
